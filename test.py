@@ -1,4 +1,5 @@
 from pynput import keyboard
+import pyperclip
 
 pressed_keys = set()
 
@@ -7,6 +8,8 @@ def on_press(key):
     print(f"Pressed: {key}")
     if (key == keyboard.KeyCode.from_char('a')):
         print("✅ 단축키 a 감지됨!")
+        text = pyperclip.paste()
+        print(text)
     if(key==keyboard.Key.esc):
         print("❌ Esc 키 눌림. 프로그램 종료.")
         return False
