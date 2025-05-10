@@ -1,5 +1,6 @@
 from pynput import keyboard
 from webbrowser import open_new_tab
+import pyperclip
 
 pressed_keys = set()
 
@@ -8,6 +9,8 @@ def on_press(key):
     print(f"Pressed: {key}")
     if (key == keyboard.KeyCode.from_char('a')):
         print("✅ 단축키 a 감지됨!")
+        text = pyperclip.paste()
+        print(f"클립보드에 있는 텍스트: {text}")
         open_new_tab("https://www.naver.com")
 
         
