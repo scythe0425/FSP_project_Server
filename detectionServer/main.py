@@ -2,6 +2,10 @@
 from flask import Flask, jsonify
 from pynput import keyboard
 import threading
+import pyperclip
+import requests
+import json
+
 
 app = Flask(__name__)
 detected_shortcuts = []
@@ -9,11 +13,25 @@ detected_shortcuts = []
 pressed_keys = set()
 
 def on_press(key):
-    print(f"Pressed: {key}")  # 어떤 키를 눌렀는지 출력
     pressed_keys.add(key)
     if (key == keyboard.KeyCode.from_char('a')):
-        print("단축키 a 감지됨")
-        detected_shortcuts.append("a")
+        detected_shortcuts.clear()
+        text = pyperclip.paste()
+        detected_shortcuts.append(text)
+        
+        # 검색 API 호출
+        try:
+            response = requests.post('http://localhost:5001/search/', json={'keyword': text})
+            if response.status_code == 200:
+                result = response.json()
+                # JSON 형식으로 결과 출력
+                print("\n=== 검색 결과 ===")
+                print(json.dumps(result, indent=2, ensure_ascii=False))
+            else:
+                print(f"검색 API 오류: {response.text}")
+        except Exception as e:
+            print(f"검색 API 호출 중 오류 발생: {str(e)}")
+
 
 def on_release(key):
     if key in pressed_keys:
