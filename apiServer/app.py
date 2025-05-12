@@ -2,6 +2,7 @@ from flask import Flask
 from search import search_bp
 from db import db_bp
 from chrome import chrome_bp
+from url_manager import url_bp
 
 app = Flask(__name__)
 
@@ -9,6 +10,7 @@ app = Flask(__name__)
 app.register_blueprint(search_bp, url_prefix='/search')
 app.register_blueprint(db_bp, url_prefix='/db')
 app.register_blueprint(chrome_bp, url_prefix='/chrome')
+app.register_blueprint(url_bp, url_prefix='/url')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

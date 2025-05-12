@@ -32,19 +32,6 @@ def on_press(key):
         except Exception as e:
             print(f"검색 API 호출 중 오류 발생: {str(e)}")
 
-    elif (key == keyboard.KeyCode.from_char('o')):
-        detected_shortcuts.clear()
-        text = pyperclip.paste()
-        detected_shortcuts.append(text)
-        # 브라우저 열기 API 호출
-        try:
-            response = requests.post('http://localhost:5001/chrome/open', json={'url': text})
-            if response.status_code == 200:
-                print(f"브라우저 열기 성공: {text}")
-            else:
-                print(f"브라우저 열기 실패: {response.text}")
-        except Exception as e:
-            print(f"브라우저 열기 중 오류 발생: {str(e)}")  
 
     elif (key == keyboard.KeyCode.from_char('s')):
         detected_shortcuts.clear()
@@ -52,7 +39,7 @@ def on_press(key):
         detected_shortcuts.append(text)
         # URL 저장 API 호출
         try:
-            response = requests.post('http://localhost:5001/db/', json={'url': text})
+            response = requests.post('http://localhost:5001/url/', json={'url': text})
             if response.status_code == 200:
                 print(f"URL 저장 성공: {text}")
             else:
@@ -69,11 +56,6 @@ def on_release(key):
 @app.route('/')
 def home():
     return '서버는 정상적으로 작동 중입니다.'
-
-
-@app.route("/shortcuts", methods=["GET"])
-def get_shortcuts():
-    return jsonify(detected_shortcuts)
 
 def start_keyboard_listener():
     with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
