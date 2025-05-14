@@ -13,6 +13,7 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+# 데이터베이스 초기화
 def init_db():
     if not os.path.exists(DB_PATH):
         conn = get_db_connection()
@@ -27,7 +28,6 @@ def init_db():
         conn.commit()
         conn.close()
 
-# 데이터베이스 초기화
 init_db()
 
 __all__ = ['db_bp'] 

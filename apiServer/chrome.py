@@ -7,6 +7,7 @@ from url_manager import url_bp
 
 chrome_bp = Blueprint('chrome', __name__)
 
+# 카테고리별 URL 열기 
 @chrome_bp.route('/open/category/<category>', methods=['POST'])
 def open_urls_by_category(category):
     conn = None
@@ -28,7 +29,7 @@ def open_urls_by_category(category):
                 return jsonify({"error": f"URL '{url}'을 여는 중 오류 발생: {str(e)}"}), 500
         
         return jsonify({
-            "message": f"'{category}' 카테고리의 {len(urls)}개 URL이 성공적으로 열렸습니다",
+            "message": f"{len(urls)} URLs in the '{category}' category have been successfully opened.",
             "urls": urls
         })
             
@@ -38,6 +39,7 @@ def open_urls_by_category(category):
         if conn:
             conn.close()
 
+# 특정 URL 열기
 @chrome_bp.route('/open/id/<int:url_id>', methods=['POST'])
 def open_url(url_id):
     conn = None
