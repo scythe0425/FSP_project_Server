@@ -54,7 +54,7 @@ def open_url(url_id):
             
         try:
             webbrowser.open(url['url'])
-            return jsonify({"message": "URL이 성공적으로 열렸습니다"})
+            return jsonify({"message": "URL have been opened successfully", "url": url['url']})
         except Exception as e:
             return jsonify({"error": f"URL을 여는 중 오류 발생: {str(e)}"}), 500
     finally:
