@@ -4,6 +4,7 @@ from db import get_db_connection
 # Blueprint 생성
 url_bp = Blueprint('url', __name__)
 
+# URL 저장
 @url_bp.route('/', methods=['POST'])
 def save_url():
     data = request.get_json()
@@ -21,9 +22,10 @@ def save_url():
     conn.commit()
     conn.close()
     
-    return jsonify({"message": "url이 성공적으로 저장되었습니다"})
+    return jsonify({"message": "URL saved successfully", "url": url, "category": category})
 
-@url_bp.route('/urls', methods=['GET'])
+# URL 조회
+@url_bp.route('/', methods=['GET'])
 def get_urls():
     conn = get_db_connection()
     c = conn.cursor()
@@ -32,7 +34,8 @@ def get_urls():
     conn.close()
     return jsonify(urls)
 
-@url_bp.route('/urls/<category>', methods=['GET'])
+# 카테고리별 URL 조회
+@url_bp.route('/category/<category>', methods=['GET'])
 def get_urls_by_category(category):
     conn = get_db_connection()
     c = conn.cursor()
@@ -41,47 +44,43 @@ def get_urls_by_category(category):
     conn.close()
     return jsonify(urls)
 
-
-
-
-@url_bp.route('/urls/<int:url_id>/category', methods=['PUT'])
-def update_category(url_id):
-    data = request.get_json()
-    new_category = data.get('category')
-    
+# URL 카테고리 업데이트
+@url_bp.route('/update/<int:url_id>/<new_category>', methods=['PUT'])
+def update_category(url_id, new_category):
     if not new_category:
         return jsonify({"error": "새로운 카테고리가 필요합니다"}), 400
-    
+
     conn = get_db_connection()
     c = conn.cursor()
-    
+
     # URL이 존재하는지 확인
     c.execute('SELECT * FROM urls WHERE id = ?', (url_id,))
     url = c.fetchone()
-    
+
     if not url:
         conn.close()
         return jsonify({"error": "해당 URL을 찾을 수 없습니다"}), 404
-    
+
     # 카테고리 업데이트
     c.execute('UPDATE urls SET category = ? WHERE id = ?', (new_category, url_id))
     conn.commit()
     conn.close()
-    
+
     return jsonify({
-        "message": "카테고리가 성공적으로 업데이트되었습니다",
+        "message": "category updated successfully",
         "url_id": url_id,
         "new_category": new_category
     })
 
-@url_bp.route('/urls/<int:url_id>/delete', methods=['DELETE'])
+# URL 삭제
+@url_bp.route('/<int:url_id>', methods=['DELETE'])
 def delete_url(url_id):
     conn = get_db_connection()
     c = conn.cursor()
     c.execute('DELETE FROM urls WHERE id = ?', (url_id,))
     conn.commit()
-    conn.close()    
-    return jsonify({"message": "URL이 성공적으로 삭제되었습니다"})
+    conn.close()
+    return jsonify({"message": "URL deleted successfully"})
 
 
 

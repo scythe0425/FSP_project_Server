@@ -15,6 +15,7 @@ pressed_keys = set()
 def on_press(key):
     pressed_keys.add(key)
     if (key == keyboard.KeyCode.from_char('f')):
+        print("단축키 감지")
         detected_shortcuts.clear()
         text = pyperclip.paste()
         detected_shortcuts.append(text)
@@ -34,6 +35,7 @@ def on_press(key):
 
 
     elif (key == keyboard.KeyCode.from_char('s')):
+        print("단축키 감지")
         detected_shortcuts.clear()
         text = pyperclip.paste()
         detected_shortcuts.append(text)
