@@ -9,6 +9,7 @@ import json
 
 app = Flask(__name__)
 detected_shortcuts = []
+searching_results = []
 
 pressed_keys = set()
 
@@ -25,6 +26,7 @@ def on_press(key):
             response = requests.post('http://localhost:5001/search/', json={'keyword': text})
             if response.status_code == 200:
                 result = response.json()
+                searching_results.append(result)
             else:
                 print(f"검색 API 오류: {response.text}")
         except Exception as e:
@@ -50,6 +52,13 @@ def on_release(key):
 @app.route('/')
 def home():
     return
+
+
+@app.route('/results', methods=['GET'])
+def results():
+    data = list(searching_results)
+    searching_results.clear()
+    return jsonify(data)
 
 def start_keyboard_listener():
     with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
