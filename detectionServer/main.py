@@ -56,9 +56,11 @@ def home():
 
 @app.route('/results', methods=['GET'])
 def results():
-    data = list(searching_results)
+    flat = []
+    for group in searching_results:
+        flat.extend(group)
     searching_results.clear()
-    return jsonify(data)
+    return jsonify(flat)
 
 def start_keyboard_listener():
     with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
