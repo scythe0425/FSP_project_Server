@@ -9,12 +9,13 @@ import json
 
 app = Flask(__name__)
 detected_shortcuts = []
+searching_results = []
 
 pressed_keys = set()
 
 def on_press(key):
     pressed_keys.add(key)
-    if (key == keyboard.KeyCode.from_char('f')):
+    if (key == keyboard.Key.alt_l):
         print("단축키 감지")
         detected_shortcuts.clear()
         text = pyperclip.paste()
@@ -25,27 +26,20 @@ def on_press(key):
             response = requests.post('http://localhost:5001/search/', json={'keyword': text})
             if response.status_code == 200:
                 result = response.json()
-                # JSON 형식으로 결과 출력
-                print(f"\n === {text}에 대한 검색 결과 ===")
-                print(json.dumps(result, indent=2, ensure_ascii=False))
+                searching_results.append(result)
             else:
                 print(f"검색 API 오류: {response.text}")
         except Exception as e:
             print(f"검색 API 호출 중 오류 발생: {str(e)}")
 
-
+        # URL 저장 API 호출
     elif (key == keyboard.KeyCode.from_char('s')):
-        print("단축키 감지")
         detected_shortcuts.clear()
         text = pyperclip.paste()
         detected_shortcuts.append(text)
-        # URL 저장 API 호출
+
         try:
             response = requests.post('http://localhost:5001/url/', json={'url': text})
-            if response.status_code == 200:
-                print(f"URL 저장 성공: {text}")
-            else:
-                print(f"URL 저장 실패: {response.text}")
         except Exception as e:
             print(f"URL 저장 중 오류 발생: {str(e)}")
 
@@ -57,7 +51,14 @@ def on_release(key):
 
 @app.route('/')
 def home():
-    return '서버는 정상적으로 작동 중입니다.'
+    return
+
+
+@app.route('/results', methods=['GET'])
+def results():
+    data = list(searching_results)
+    searching_results.clear()
+    return jsonify(data)
 
 def start_keyboard_listener():
     with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:

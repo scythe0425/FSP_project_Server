@@ -21,13 +21,9 @@ def on_press(key):
 
 def on_release(key):
     print(f"Released: {key}")
-    if key in pressed_keys:
-        print(pressed_keys)
-        pressed_keys.remove(key)
-        print(f"현재 저장된 keyboard 입력에서 제거됨: {key}")
-        print(pressed_keys)
-    # if key in pressed_keys:
-    #     pressed_keys.remove(key)
+    pressed_keys.clear()  # 모든 키 해제
+    print("현재 저장된 keyboard 입력 초기화됨.")
+    print("현재 저장된 keyboard 입력:", pressed_keys)
 
 with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
     print("🔍 키보드 감지 시작. Alt + S를 눌러봐!")

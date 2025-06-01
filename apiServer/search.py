@@ -30,12 +30,12 @@ def search():
         # 검색 결과 처리
         if "items" in data:
             results = []
-            for item in data["items"][:10]:
+            for item in data["items"][:10]: # 최대 1개 결과만 반환
                 results.append({
                     "title": item.get("title", ""),
                     "link": item.get("link", "")
                 })
-            return jsonify({"results": results})
+            return jsonify(results)
         else:
             return jsonify({"error": "검색 결과가 없습니다"}), 404
             
