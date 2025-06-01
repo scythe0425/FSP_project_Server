@@ -23,14 +23,13 @@ def search():
         }
         
         response = requests.get(url, params=params)
-        response.raise_for_status()  # HTTP 에러 체크
-        
+        response.raise_for_status()
         data = response.json()
         
         # 검색 결과 처리
         if "items" in data:
             results = []
-            for item in data["items"][:10]: # 최대 1개 결과만 반환
+            for item in data["items"][:10]:
                 results.append({
                     "title": item.get("title", ""),
                     "link": item.get("link", "")
