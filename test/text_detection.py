@@ -8,52 +8,35 @@ import json
 
 
 app = Flask(__name__)
-detected_shortcuts = []
-
+copied_text = []
 pressed_keys = set()
 
 def on_press(key):
     pressed_keys.add(key)
-    if (keyboard.Key.alt_l in pressed_keys and keyboard.KeyCode.from_char('f') in pressed_keys):
-        print("단축키 감지")
-        detected_shortcuts.clear()
-        text = pyperclip.paste()
-        detected_shortcuts.append(text)
-        
-        # 검색 API 호출
-        try:
-            response = requests.post('http://localhost:5001/search/', json={'keyword': text})
-            if response.status_code == 200:
-                result = response.json()
-                # JSON 형식으로 결과 출력
-                print(f"\n === {text}에 대한 검색 결과 ===")
-                print(json.dumps(result, indent=2, ensure_ascii=False))
-            else:
-                print(f"검색 API 오류: {response.text}")
-        except Exception as e:
-            print(f"검색 API 호출 중 오류 발생: {str(e)}")
 
+def on_release(key):
+    print("현재 저장된 keyboard 입력:", pressed_keys)
+    if (keyboard.Key.alt_l in pressed_keys and keyboard.KeyCode.from_char('f') in pressed_keys):
+        print("단축키 감자")
 
     elif (keyboard.Key.alt_l in pressed_keys and keyboard.KeyCode.from_char('s') in pressed_keys):
         print("단축키 감지")
-        detected_shortcuts.clear()
-        text = pyperclip.paste()
-        detected_shortcuts.append(text)
-        # URL 저장 API 호출
-        try:
-            response = requests.post('http://localhost:5001/url/', json={'url': text})
-            if response.status_code == 200:
-                print(f"URL 저장 성공: {text}")
-            else:
-                print(f"URL 저장 실패: {response.text}")
-        except Exception as e:
-            print(f"URL 저장 중 오류 발생: {str(e)}")
-
-
-def on_release(key):
+    text = pyperclip.paste()
+    print("현재 클립보드 내용:", text)
     pressed_keys.clear()  # 모든 키 해제
-    print("현재 저장된 keyboard 입력 초기화됨.")
-    print("현재 저장된 keyboard 입력:", pressed_keys)
+    # print("현재 저장된 keyboard 입력 초기화됨.")
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
