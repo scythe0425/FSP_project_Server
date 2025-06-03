@@ -15,7 +15,7 @@ pressed_keys = set()
 
 def on_press(key):
     pressed_keys.add(key)
-    if (key == keyboard.Key.alt_l):
+    if (keyboard.Key.alt_l in pressed_keys and keyboard.KeyCode.from_char('s') in pressed_keys):
         print("단축키 감지")
         detected_shortcuts.clear()
         text = pyperclip.paste()
@@ -33,7 +33,7 @@ def on_press(key):
             print(f"검색 API 호출 중 오류 발생: {str(e)}")
 
         # URL 저장 API 호출
-    elif (key == keyboard.KeyCode.from_char('s')):
+    elif (keyboard.Key.alt_l in pressed_keys and keyboard.KeyCode.from_char('f') in pressed_keys):
         detected_shortcuts.clear()
         text = pyperclip.paste()
         detected_shortcuts.append(text)
