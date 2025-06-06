@@ -29,7 +29,7 @@ def save_url():
 def get_urls():
     conn = get_db_connection()
     c = conn.cursor()
-    c.execute('SELECT * FROM urls ORDER BY created_at DESC')
+    c.execute('SELECT url, created_at FROM urls ORDER BY created_at DESC')
     urls = [dict(row) for row in c.fetchall()]
     conn.close()
     return jsonify(urls)
